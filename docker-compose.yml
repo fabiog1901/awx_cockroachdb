@@ -4,6 +4,7 @@ services:
   utility:
     image: utility1:latest
     hostname: utility
+    tty: true
 
   mysql:
     ports:
@@ -17,6 +18,7 @@ services:
       MYSQL_PASSWORD: semaphore
 
   semaphore:
+    user: root
     ports:
       - 3000:3000
     image: ansiblesemaphore/semaphore:latest

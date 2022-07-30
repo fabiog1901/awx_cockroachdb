@@ -2,7 +2,7 @@
 #   INFRA    #
 ##############
 - name: PROVISION HOSTS AND BUILD ANSIBLE HOSTS INVENTORY
-  hosts: utility
+  hosts: localhost
   connection: local
   gather_facts: no
   become: no
@@ -261,7 +261,7 @@
     - krb_server
 
 - name: GENERATE COCKROACHDB CERTS
-  hosts: utility
+  hosts: localhost
   gather_facts: yes
   become: no
   tasks:
