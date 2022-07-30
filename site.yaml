@@ -1,18 +1,7 @@
 ##############
 #   INFRA    #
 ##############
-- name: TEST
-  ansible.builtin.debug:
-    msg: "'{{ lookup('ansible.builtin.env', 'AZURE_SUBSCRIPTION_ID') }}' variable."
 
-- ansible.builtin.shell: |
-    env
-  register: envs
-
-- ansible.builtin.debug:
-    msg: "{{ envs }}"
-    
-- ansible.builtin.fail:
 
 - name: PROVISION HOSTS AND BUILD ANSIBLE HOSTS INVENTORY
   hosts: localhost
@@ -20,6 +9,19 @@
   gather_facts: no
   become: no
   tasks:
+    - name: TEST
+      ansible.builtin.debug:
+        msg: "'{{ lookup('ansible.builtin.env', 'AZURE_SUBSCRIPTION_ID') }}' variable."
+
+    - ansible.builtin.shell: |
+        env
+      register: envs
+
+    - ansible.builtin.debug:
+        msg: "{{ envs }}"
+
+    - ansible.builtin.fail:
+
     - name: ensure presence of instances and Ansible inventory
       fabiog1901.cockroachdb.cloud_instance:
         state: "{{ state }}"
