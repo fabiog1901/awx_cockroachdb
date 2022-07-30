@@ -2,16 +2,17 @@
 #   INFRA    #
 ##############
 - name: TEST
-  debug:
+  ansible.builtin.debug:
     msg: "'{{ lookup('ansible.builtin.env', 'AZURE_SUBSCRIPTION_ID') }}' variable."
 
-- shell: |
+- ansible.builtin.shell: |
     env
   register: envs
 
-- debug:
+- ansible.builtin.debug:
     msg: "{{ envs }}"
-- fail:
+    
+- ansible.builtin.fail:
 
 - name: PROVISION HOSTS AND BUILD ANSIBLE HOSTS INVENTORY
   hosts: localhost
