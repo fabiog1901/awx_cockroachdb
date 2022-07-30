@@ -13,11 +13,13 @@
       ansible.builtin.debug:
         msg: "'{{ lookup('ansible.builtin.env', 'AZURE_SUBSCRIPTION_ID') }}' variable."
 
-    - ansible.builtin.shell: |
+    - name: print shell envs
+      ansible.builtin.shell: |
         env
       register: envs
 
-    - ansible.builtin.debug:
+    - name: print envs
+      ansible.builtin.debug:
         msg: "{{ envs }}"
 
     - ansible.builtin.fail:
