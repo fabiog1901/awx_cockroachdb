@@ -9,26 +9,11 @@
   gather_facts: no
   become: no
   tasks:
-    - name: TEST
-      ansible.builtin.debug:
-        msg: "'{{ lookup('ansible.builtin.env', 'AZURE_SUBSCRIPTION_ID') }}' variable."
-
-    - name: print shell envs
-      ansible.builtin.shell: |
-        env
-      register: envs
-
-    - name: print envs
-      ansible.builtin.debug:
-        msg: "{{ envs }}"
-
-    - ansible.builtin.fail:
-
     - name: ensure presence of instances and Ansible inventory
       fabiog1901.cockroachdb.cloud_instance:
         state: "{{ state }}"
         deployment_id: "{{ deployment_id }}"
-        deployment: "{{ infra }}"
+        deployment: "{{ deployment }}"
         defaults:
           instances:
             aws:
