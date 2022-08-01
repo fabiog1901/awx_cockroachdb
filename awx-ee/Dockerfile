@@ -9,7 +9,9 @@ ADD requirements.yml /tmp/requirements.yml
 RUN /usr/bin/python3 -m pip install --upgrade pip
 
 # install Ansible Galaxy collections
-RUN ansible-galaxy collection install -r /tmp/requirements.yml --collections-path /usr/share/ansible/collections
+# RUN ansible-galaxy collection install git+https://github.com/fabiog1901/cockroachdb-collection.git
+RUN ansible-galaxy collection install ansible.posix
+RUN ansible-galaxy collection install community.general
 
 # install Python dependencies
 RUN pip install boto3 boto botocore google-api-core google-auth google-cloud-compute googleapis-common-protos azure-common azure-core azure-identity azure-mgmt-compute azure-mgmt-core azure-mgmt-network azure-mgmt-resource
