@@ -9,6 +9,15 @@
   gather_facts: no
   become: no
   tasks:
+    - name: TEST
+      ansible.builtin.debug:
+        msg: "'{{ lookup('ansible.builtin.env', 'AZURE_RESOOURCE_GROUP') }}' => az_rg variable."
+
+    - ansible.builtin.debug:
+        msg: "'{{ lookup('ansible.builtin.env', 'GCP_PROJECT') }}' => GCP_PROJECT variable."
+
+    - ansible.builtin.fail:
+
     - name: ensure presence of instances and Ansible inventory
       fabiog1901.cockroachdb.cloud_instance:
         state: "{{ state }}"
