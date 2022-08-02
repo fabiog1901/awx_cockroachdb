@@ -232,7 +232,7 @@
   tasks:
     - name: install MIT KDC client
       include_role:
-        name: krb_client
+        name: fabiog1901.cockroachdb.krb_client
       when: krb5_realm is defined
   tags:
     - mitkdc
@@ -245,7 +245,7 @@
   tasks:
     - name: install MIT KDC server
       include_role:
-        name: krb_server
+        name: fabiog1901.cockroachdb.krb_server
   tags:
     - mitkdc
     - krb_server
@@ -256,7 +256,7 @@
   become: no
   tasks:
     - include_role:
-        name: certificates
+        name: fabiog1901.cockroachdb.certificates
       when: cockroachdb_secure
 
   tags:
@@ -274,7 +274,7 @@
 
     # - fail:
     - include_role:
-        name: cockroachdb
+        name: fabiog1901.cockroachdb.cockroachdb
       vars:
         cockroachdb_deployment_type: "{{ cockroachdb_deployment | default('standard') }}"
   tags:
@@ -287,7 +287,7 @@
   tasks:
     - name: install HAProxy
       include_role:
-        name: haproxy
+        name: fabiog1901.cockroachdb.haproxy
       vars:
         haproxy_group: "{{ groups[cluster_name] | intersect(groups['cockroachdb']) }}"
         haproxy_port: "{{ cockroachdb_port | default('26257') }}"
@@ -296,7 +296,7 @@
         haproxy_httpchk: "/health?ready=1"
 
     - include_role:
-        name: cockroachdb
+        name: fabiog1901.cockroachdb.cockroachdb
       vars:
         cockroachdb_deployment_type: install only
 
@@ -361,7 +361,7 @@
   tasks:
     - name: install cockroachdb sql client
       include_role:
-        name: cockroachdb
+        name: fabiog1901.cockroachdb.cockroachdb
       vars:
         cockroachdb_deployment_type: install only
 
