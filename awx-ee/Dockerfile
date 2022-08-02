@@ -16,6 +16,10 @@ RUN ansible-galaxy collection install community.general
 # install Python dependencies
 RUN pip install boto3 boto botocore google-api-core google-auth google-cloud-compute googleapis-common-protos azure-common azure-core azure-identity azure-mgmt-compute azure-mgmt-core azure-mgmt-network azure-mgmt-resource
 
+RUN rpm --import https://packages.microsoft.com/keys/microsoft.asc
+RUN dnf install -y https://packages.microsoft.com/config/rhel/8/packages-microsoft-prod.rpm
+RUN dnf update
+RUN dnf install -y azure-cli
 
 USER 1000
 
