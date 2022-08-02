@@ -257,7 +257,7 @@
   tasks:
     - debug:
         msg: "{{ cockroachdb_secure }} is cocksecure"
-        
+
     - include_role:
         name: fabiog1901.cockroachdb.certificates
       when: cockroachdb_secure
@@ -538,3 +538,5 @@
           - "{{ hostvars[item].private_hostname }}"
           - "-"
       loop: "{{ groups['haproxy'] }}"
+      when: groups['haproxy'] is defined
+      
