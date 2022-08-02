@@ -255,6 +255,9 @@
   gather_facts: yes
   become: no
   tasks:
+    - debug:
+        msg: "{{ cockroachdb_secure }} is cocksecure"
+        
     - include_role:
         name: fabiog1901.cockroachdb.certificates
       when: cockroachdb_secure
