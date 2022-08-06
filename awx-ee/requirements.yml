@@ -1,6 +1,0 @@
-collections:
-  - name: https://github.com/fabiog1901/cockroachdb-collection.git
-    type: git
-    version: main
-  - name: ansible.posix
-  - name: community.general
