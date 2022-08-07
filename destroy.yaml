@@ -1,0 +1,22 @@
+##############
+#   INFRA    #
+##############
+
+- name: UNPROVISION
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  become: no
+  tasks:
+    - name: include awx vars
+      ansible.builtin.include_vars: awx.yaml
+      
+    - name: destroy instances
+      fabiog1901.cockroachdb.cloud_instance:
+        state: absent
+        deployment_id: "{{ deployment_id }}"
+        deployment: {}
+        defaults: {}
+
+  tags:
+    - cloud_instance

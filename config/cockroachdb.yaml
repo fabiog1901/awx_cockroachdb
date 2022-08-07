@@ -1,0 +1,223 @@
+##################
+# INFRASTRUCTURE #
+##################
+
+# VM INSTANCES
+deployment:
+  - cluster_name: "{{ deployment_id }}"
+    inventory_groups:
+      - cockroachdb
+    instance:
+      cpu: 3
+      # mem:
+    volumes:
+      os:
+        size: 10
+        type: standard_ssd
+      data:
+        - size: "{{ desired_disk_size | default(100) }}"
+          type: local_ssd
+          delete_on_termination: true
+    groups:
+      # AWS
+      - import: "{{ regions.aws.us_east_1.a }}"
+        exact_count: "{{ ('aws_us_east_1a' in []) | ternary(desired_count, 0) }}"
+      - import: *aws_us_east_1b
+        exact_count: "{{ ('aws_us_east_1b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_us_east_1c
+        exact_count: "{{ ('aws_us_east_1c' in desired_regions) | ternary(desired_count, 0) }}"
+      
+      - import: *aws_us_east_2a
+        exact_count: "{{ ('aws_us_east_2a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_us_east_2b
+        exact_count: "{{ ('aws_us_east_2b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_us_east_2c
+        exact_count: "{{ ('aws_us_east_2c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *aws_us_west_2a
+        exact_count: "{{ ('aws_us_west_2a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_us_west_2b
+        exact_count: "{{ ('aws_us_west_2b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_us_west_2c
+        exact_count: "{{ ('aws_us_west_2c' in desired_regions) | ternary(desired_count, 0) }}"
+      
+      - import: *aws_eu_west_3a
+        exact_count: "{{ ('aws_us_west_3a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_eu_west_3b
+        exact_count: "{{ ('aws_us_west_3b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_eu_west_3c
+        exact_count: "{{ ('aws_us_west_3c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *aws_eu_west_1a
+        exact_count: "{{ ('aws_eu_west_1a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_eu_west_1b
+        exact_count: "{{ ('aws_eu_west_1b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_eu_west_1c
+        exact_count: "{{ ('aws_eu_west_1c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *aws_ap_northeast_1a
+        exact_count: "{{ ('aws_ap_northeast_1a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_ap_northeast_1b
+        exact_count: "{{ ('aws_ap_northeast_1b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_ap_northeast_1c
+        exact_count: "{{ ('aws_ap_northeast_1c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *aws_ap_south_1a
+        exact_count: "{{ ('aws_ap_south_1a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_ap_south_1b
+        exact_count: "{{ ('aws_ap_south_1b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *aws_ap_south_1c
+        exact_count: "{{ ('aws_ap_south_1c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      # GCP
+      - import: *gcp_us_east1_d
+        exact_count: "{{ ('gcp_us_east1_d' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east1_b
+        exact_count: "{{ ('gcp_us_east1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east1_c
+        exact_count: "{{ ('gcp_us_east1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      
+      - import: *gcp_us_east4_a
+        exact_count: "{{ ('gcp_us_east4_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east4_b
+        exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east4_c
+        exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_us_central1_a
+        exact_count: "{{ ('gcp_us_central1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_b
+        exact_count: "{{ ('gcp_us_central1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_c
+        exact_count: "{{ ('gcp_us_central1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_f
+        exact_count: "{{ ('gcp_us_central1_f' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_us_west1_a
+        exact_count: "{{ ('gcp_us_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west1_b
+        exact_count: "{{ ('gcp_us_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west1_c
+        exact_count: "{{ ('gcp_us_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_us_west4_a
+        exact_count: "{{ ('gcp_us_west4_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west4_b
+        exact_count: "{{ ('gcp_us_west4_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west4_c
+        exact_count: "{{ ('gcp_us_west4_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_europe_north1_a
+        exact_count: "{{ ('gcp_europe_north1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_north1_b
+        exact_count: "{{ ('gcp_europe_north1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_north1_c
+        exact_count: "{{ ('gcp_europe_north1_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_europe_west2_a
+        exact_count: "{{ ('gcp_europe_west2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west2_b
+        exact_count: "{{ ('gcp_europe_west2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west2_c
+        exact_count: "{{ ('gcp_europe_west2_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_europe_west1_a
+        exact_count: "{{ ('gcp_europe_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west1_b
+        exact_count: "{{ ('gcp_europe_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west1_c
+        exact_count: "{{ ('gcp_europe_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_australia_southeast1_a
+        exact_count: "{{ ('gcp_australia_southeast1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_australia_southeast1_b
+        exact_count: "{{ ('gcp_australia_southeast1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_australia_southeast1_c
+        exact_count: "{{ ('gcp_australia_southeast1_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_asia_southeast2_a
+        exact_count: "{{ ('gcp_asia_southeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_southeast2_b
+        exact_count: "{{ ('gcp_asia_southeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_southeast2_c
+        exact_count: "{{ ('gcp_asia_southeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *gcp_asia_northeast2_a
+        exact_count: "{{ ('gcp_asia_northeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_northeast2_b
+        exact_count: "{{ ('gcp_asia_northeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_northeast2_c
+        exact_count: "{{ ('gcp_asia_northeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
+
+      # AZURE
+      - import: *azure_eastus_default
+        exact_count: "{{ ('azure_eastus_default' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *azure_westeurope_default
+        exact_count: "{{ ('azure_westeurope_default' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *azure_francecentral_default
+        exact_count: "{{ ('azure_francecentral_default' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *azure_southafricanorth_default
+        exact_count: "{{ ('azure_southafricanorth_default' in desired_regions) | ternary(desired_count, 0) }}"
+
+      - import: *azure_koreacental_default
+        exact_count: "{{ ('azure_koreacental_default' in desired_regions) | ternary(desired_count, 0) }}"
+
+############
+# PLATFORM #
+############
+
+# OPENSSL CERTIFICATES
+certificates_organization_name: fabio-org
+certificates_dir: &certs
+  certs
+certificates_usernames: &crdb_client_certs
+  - root
+  - app
+certificates_hosts: "{{ groups['cockroachdb'] }}"
+certificates_loadbalancer: "{{ groups['haproxy'] }}"
+
+# COCKROACHDB
+cockroachdb_deployment: standard
+cockroachdb_secure: no
+cockroachdb_krb: no
+cockroachdb_krbsrvname: cockroach
+cockroachdb_certificates_dir: *certs
+cockroachdb_certificates_clients: *crdb_client_certs
+# cockroachdb_version: latest
+cockroachdb_join:
+  - "{{ hostvars[( groups[cluster_name] | intersect(groups['cockroachdb']) )[0]].public_ip }}"
+  - "{{ hostvars[( groups[cluster_name] | intersect(groups['cockroachdb']) )[1]].public_ip }}"
+  - "{{ hostvars[( groups[cluster_name] | intersect(groups['cockroachdb']) )[2]].public_ip }}"
+cockroachdb_port: 26257
+cockroachdb_http_addr_ip: "0.0.0.0"
+cockroachdb_http_addr_port: "8080"
+# cockroachdb_cache: '.25'
+# cockroachdb_max_sql_memory: '.25'
+# the value for below vars are fetched individually for each node from hostvars
+# these are variables that must be already available in the Ansible inventory
+cockroachdb_locality: "region={{ region | default('') }},zone={{ zone | default('') }}"
+cockroachdb_advertise_addr: "{{ public_ip | default('') }}"
+# cockroachdb_listen_addr: "{{ public_ip | default('') }}"
+# cockroachdb_attrs: "{{ extra_vars.attrs | default('std') }}"
+cockroachdb_cluster_organization: Workshop
+cockroachdb_enterprise_license: crl-0-EOSvhJcGGAIiCFdvcmtzaG9w
+cockroachdb_encryption: no
+cockroachdb_encryption_key_old:
+cockroachdb_encryption_key_new:
+
+###############
+# APPLICATION #
+###############
+
+dbusers: []
+  # - name: fabio
+  #   password: cockroach
+  #   is_cert: no
+  #   is_admin: yes
+  # - name: app
+  #   password: null
+  #   is_cert: yes
+  #   is_admin: yes
