@@ -3,6 +3,7 @@
 # deployment_id: ""
 # desired_regions: []
 # desired_disk_size: 100
+# desired_count: 1
 # desired_cpus: 4
 # cockroachdb_version: latest
 # cockroachdb_cache: '.25'

@@ -7,8 +7,8 @@
   connection: local
   gather_facts: no
   become: no
-  vars:
-    
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: ensure presence of instances and Ansible inventory
       fabiog1901.cockroachdb.cloud_instance:
