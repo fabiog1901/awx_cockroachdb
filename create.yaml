@@ -15,7 +15,7 @@
         state: present
         deployment_id: "{{ deployment_id }}"
         deployment: "{{ deployment }}"
-        defaults: "{{ instances }}"
+        defaults: "{{ defaults }}"
       register: instances
 
    
