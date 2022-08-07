@@ -38,7 +38,7 @@ deployment:
     groups:
       # AWS
       - import: "{{ regions.aws.us_east_1.a }}"
-        exact_count: "{{ ('aws_us_east_1a' in []) | ternary(desired_count, 0) }}"
+        exact_count: "{{ ('aws_us_east_1a' in desired_regions) | ternary(desired_count, 0) }}"
       - import: "{{ regions.aws.us_east_1.b }}"
         exact_count: "{{ ('aws_us_east_1b' in desired_regions) | ternary(desired_count, 0) }}"
       - import: "{{ regions.aws.us_east_1.c }}"
