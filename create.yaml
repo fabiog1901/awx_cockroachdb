@@ -64,6 +64,8 @@
   hosts: krb5_client, krb_client
   gather_facts: yes
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: install MIT KDC client
       include_role:
@@ -77,6 +79,8 @@
   hosts: krb5_server, krb_server
   gather_facts: yes
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: install MIT KDC server
       include_role:
@@ -89,6 +93,8 @@
   hosts: localhost
   gather_facts: yes
   become: no
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - include_role:
         name: fabiog1901.cockroachdb.certificates
@@ -101,6 +107,8 @@
   hosts: cockroachdb
   gather_facts: yes
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   serial: "{{ (cockroachdb_deployment == 'upgrade') | ternary(1, '100%') }}"
   tasks:
     - include_role:
@@ -114,6 +122,8 @@
   hosts: fabiog1901.cockroachdb.haproxy
   gather_facts: yes
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: install HAProxy
       include_role:
@@ -144,6 +154,8 @@
   hosts: krb5_server
   gather_facts: no
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: create user and keytab in /etc/krb5.keytab
       shell: |
@@ -176,6 +188,8 @@
   hosts: cockroachdb
   gather_facts: no
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: Copy file with owner and permissions
       ansible.builtin.copy:
@@ -188,6 +202,8 @@
   hosts: app
   gather_facts: no
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: install cockroachdb sql client
       include_role:
@@ -228,6 +244,8 @@
   hosts: cockroachdb
   gather_facts: no
   become: yes
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: cockroachdb - set hba.conf setting
       run_once: yes
@@ -348,6 +366,8 @@
   hosts: localhost
   gather_facts: no
   become: no
+  vars_files:
+    - config/cockroachdb.yaml
   tasks:
     - name: PRINT GROUPS MAGIC VARIABLE
       debug:
