@@ -17,9 +17,6 @@
         deployment: "{{ deployment }}"
         defaults: "{{ defaults }}"
       register: instances
-
-    - pause:
-        minutes: 5
    
     - name: Wait for SSH to come up
       wait_for:
