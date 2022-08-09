@@ -7,10 +7,9 @@
   connection: local
   gather_facts: no
   become: no
-  tasks:
-    - name: include awx vars
-      ansible.builtin.include_vars: awx.yaml
-      
+  vars_files:
+    - config/cockroachdb.yaml
+  tasks:     
     - name: destroy instances
       fabiog1901.cockroachdb.cloud_instance:
         state: absent
