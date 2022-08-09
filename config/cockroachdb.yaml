@@ -219,7 +219,7 @@ cockroachdb_advertise_addr: "{{ public_ip | default('') }}"
 # cockroachdb_listen_addr: "{{ public_ip | default('') }}"
 # cockroachdb_attrs: "{{ extra_vars.attrs | default('std') }}"
 cockroachdb_cluster_organization: Workshop
-cockroachdb_enterprise_license: crl-0-xxxxxxxx
+# cockroachdb_enterprise_license: crl-0-xxxxxxxx
 cockroachdb_encryption: no
 cockroachdb_encryption_key_old:
 cockroachdb_encryption_key_new:
