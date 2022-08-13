@@ -92,7 +92,7 @@ deployment:
         exact_count: "{{ ('gcp_us_east1_d' in desired_regions) | ternary(desired_count, 0) }}"
       - import: "{{ regions.gcp.us_east1.b }}"
         exact_count: "{{ ('gcp_us_east1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      - import: "{{ regions.gcp.us_east1.v }}"
+      - import: "{{ regions.gcp.us_east1.c }}"
         exact_count: "{{ ('gcp_us_east1_c' in desired_regions) | ternary(desired_count, 0) }}"
       
       - import: "{{ regions.gcp.us_east4.a }}"
