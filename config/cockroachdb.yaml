@@ -27,6 +27,7 @@ deployment:
     instance:
       cpu: "{{ desired_cpus }}"
       # mem:
+    role: workshop
     volumes:
       os:
         size: 10
