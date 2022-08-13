@@ -8,12 +8,12 @@
 # cockroachdb_version: latest
 # cockroachdb_cache: '.25'
 # cockroachdb_max_sql_memory: '.25'
+# cockroachdb_enterprise_license: 
 
 # From inventory:
 
 # regions
 # instances
-
 
 ##################
 # INFRASTRUCTURE #
@@ -86,101 +86,101 @@ deployment:
       - import: "{{ regions.aws.ap_south_1.a }}"
         exact_count: "{{ ('aws_ap_south_1c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # # GCP
-      # - import: *gcp_us_east1_d
-      #   exact_count: "{{ ('gcp_us_east1_d' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_east1_b
-      #   exact_count: "{{ ('gcp_us_east1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_east1_c
-      #   exact_count: "{{ ('gcp_us_east1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      # GCP
+      - import: *gcp_us_east1_d
+        exact_count: "{{ ('gcp_us_east1_d' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east1_b
+        exact_count: "{{ ('gcp_us_east1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east1_c
+        exact_count: "{{ ('gcp_us_east1_c' in desired_regions) | ternary(desired_count, 0) }}"
       
-      # - import: *gcp_us_east4_a
-      #   exact_count: "{{ ('gcp_us_east4_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_east4_b
-      #   exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_east4_c
-      #   exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east4_a
+        exact_count: "{{ ('gcp_us_east4_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east4_b
+        exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_east4_c
+        exact_count: "{{ ('gcp_us_east4_b' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_us_central1_a
-      #   exact_count: "{{ ('gcp_us_central1_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_central1_b
-      #   exact_count: "{{ ('gcp_us_central1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_central1_c
-      #   exact_count: "{{ ('gcp_us_central1_c' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_central1_f
-      #   exact_count: "{{ ('gcp_us_central1_f' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_a
+        exact_count: "{{ ('gcp_us_central1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_b
+        exact_count: "{{ ('gcp_us_central1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_c
+        exact_count: "{{ ('gcp_us_central1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_central1_f
+        exact_count: "{{ ('gcp_us_central1_f' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_us_west1_a
-      #   exact_count: "{{ ('gcp_us_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_west1_b
-      #   exact_count: "{{ ('gcp_us_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_west1_c
-      #   exact_count: "{{ ('gcp_us_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west1_a
+        exact_count: "{{ ('gcp_us_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west1_b
+        exact_count: "{{ ('gcp_us_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west1_c
+        exact_count: "{{ ('gcp_us_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_us_west4_a
-      #   exact_count: "{{ ('gcp_us_west4_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_west4_b
-      #   exact_count: "{{ ('gcp_us_west4_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_us_west4_c
-      #   exact_count: "{{ ('gcp_us_west4_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west4_a
+        exact_count: "{{ ('gcp_us_west4_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west4_b
+        exact_count: "{{ ('gcp_us_west4_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_us_west4_c
+        exact_count: "{{ ('gcp_us_west4_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_europe_north1_a
-      #   exact_count: "{{ ('gcp_europe_north1_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_north1_b
-      #   exact_count: "{{ ('gcp_europe_north1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_north1_c
-      #   exact_count: "{{ ('gcp_europe_north1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_north1_a
+        exact_count: "{{ ('gcp_europe_north1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_north1_b
+        exact_count: "{{ ('gcp_europe_north1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_north1_c
+        exact_count: "{{ ('gcp_europe_north1_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_europe_west2_a
-      #   exact_count: "{{ ('gcp_europe_west2_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_west2_b
-      #   exact_count: "{{ ('gcp_europe_west2_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_west2_c
-      #   exact_count: "{{ ('gcp_europe_west2_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west2_a
+        exact_count: "{{ ('gcp_europe_west2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west2_b
+        exact_count: "{{ ('gcp_europe_west2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west2_c
+        exact_count: "{{ ('gcp_europe_west2_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_europe_west1_a
-      #   exact_count: "{{ ('gcp_europe_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_west1_b
-      #   exact_count: "{{ ('gcp_europe_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_europe_west1_c
-      #   exact_count: "{{ ('gcp_europe_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west1_a
+        exact_count: "{{ ('gcp_europe_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west1_b
+        exact_count: "{{ ('gcp_europe_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_europe_west1_c
+        exact_count: "{{ ('gcp_europe_west1_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_australia_southeast1_a
-      #   exact_count: "{{ ('gcp_australia_southeast1_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_australia_southeast1_b
-      #   exact_count: "{{ ('gcp_australia_southeast1_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_australia_southeast1_c
-      #   exact_count: "{{ ('gcp_australia_southeast1_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_australia_southeast1_a
+        exact_count: "{{ ('gcp_australia_southeast1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_australia_southeast1_b
+        exact_count: "{{ ('gcp_australia_southeast1_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_australia_southeast1_c
+        exact_count: "{{ ('gcp_australia_southeast1_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_asia_southeast2_a
-      #   exact_count: "{{ ('gcp_asia_southeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_asia_southeast2_b
-      #   exact_count: "{{ ('gcp_asia_southeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_asia_southeast2_c
-      #   exact_count: "{{ ('gcp_asia_southeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_southeast2_a
+        exact_count: "{{ ('gcp_asia_southeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_southeast2_b
+        exact_count: "{{ ('gcp_asia_southeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_southeast2_c
+        exact_count: "{{ ('gcp_asia_southeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *gcp_asia_northeast2_a
-      #   exact_count: "{{ ('gcp_asia_northeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_asia_northeast2_b
-      #   exact_count: "{{ ('gcp_asia_northeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
-      # - import: *gcp_asia_northeast2_c
-      #   exact_count: "{{ ('gcp_asia_northeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_northeast2_a
+        exact_count: "{{ ('gcp_asia_northeast2_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_northeast2_b
+        exact_count: "{{ ('gcp_asia_northeast2_b' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *gcp_asia_northeast2_c
+        exact_count: "{{ ('gcp_asia_northeast2_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # # AZURE
-      # - import: *azure_eastus_default
-      #   exact_count: "{{ ('azure_eastus_default' in desired_regions) | ternary(desired_count, 0) }}"
+      # AZURE
+      - import: *azure_eastus_default
+        exact_count: "{{ ('azure_eastus_default' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *azure_westeurope_default
-      #   exact_count: "{{ ('azure_westeurope_default' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *azure_westeurope_default
+        exact_count: "{{ ('azure_westeurope_default' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *azure_francecentral_default
-      #   exact_count: "{{ ('azure_francecentral_default' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *azure_francecentral_default
+        exact_count: "{{ ('azure_francecentral_default' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *azure_southafricanorth_default
-      #   exact_count: "{{ ('azure_southafricanorth_default' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *azure_southafricanorth_default
+        exact_count: "{{ ('azure_southafricanorth_default' in desired_regions) | ternary(desired_count, 0) }}"
 
-      # - import: *azure_koreacental_default
-      #   exact_count: "{{ ('azure_koreacental_default' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: *azure_koreacental_default
+        exact_count: "{{ ('azure_koreacental_default' in desired_regions) | ternary(desired_count, 0) }}"
       
 
 ##############
