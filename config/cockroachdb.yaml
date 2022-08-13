@@ -181,7 +181,7 @@ deployment:
         exact_count: "{{ ('azure_southafricanorth_default' in desired_regions) | ternary(desired_count, 0) }}"
 
       - import: "{{ regions.azure.koreacentral.default }}"
-        exact_count: "{{ ('azure_koreacental_default' in desired_regions) | ternary(desired_count, 0) }}"
+        exact_count: "{{ ('azure_koreacentral_default' in desired_regions) | ternary(desired_count, 0) }}"
       
 
 ##############
