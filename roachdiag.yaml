@@ -1,0 +1,441 @@
+---
+  ##############
+  #   INFRA    #
+  ##############
+  - name: PROVISION HOSTS AND BUILD ANSIBLE HOSTS INVENTORY
+    hosts: localhost
+    connection: local
+    gather_facts: no
+    become: no
+    vars_files:
+      - config/cockroachdb.yaml
+    tasks:
+      - name: ensure presence of instances and Ansible inventory
+        fabiog1901.cockroachdb.cloud_instance:
+          state: present
+          mode: query
+          deployment_id: "{{ deployment_id }}"
+          deployment: []
+          defaults: {}
+        register: instances
+     
+      - name: Wait for SSH to come up
+        wait_for:
+          host: "{{ item.public_ip }}"
+          port: 22
+          timeout: 180
+          sleep: 5
+          state: started
+        loop: "{{ instances.out }}"
+  
+      - name: add instances to inventory groups
+        add_host:
+          # id
+          name: "{{ item.public_ip }}"
+          id: "{{ item.id }}"
+          
+          # locality
+          cloud: "{{ item.cloud }}"
+          region: "{{ item.region }}"
+          zone: "{{ item.zone }}"
+          
+          # addresses
+          public_hostname: "{{ item.public_hostname }}"
+          public_ip: "{{ item.public_ip }}"
+          private_hostname: "{{ item.private_hostname }}"
+          private_ip: "{{ item.private_ip }}"
+  
+          # tags
+          ansible_user: "{{ item.ansible_user }}"
+          groups: "{{ item.inventory_groups }}"
+          cluster_name: "{{ item.cluster_name }}"
+          group_name: "{{ item.group_name }}"
+          extra_vars: "{{ item.extra_vars }}"
+  
+        loop: "{{ instances.out }}"
+        
+    tags:
+      - cloud_instance
+  
+  ##############
+  #  PLATFORM  #
+  ##############
+  - name: RUN ROACHDIAG
+    hosts: cockroachdb
+    gather_facts: yes
+    become: yes
+    vars_files:
+      - config/cockroachdb.yaml
+    serial: "{{ (cockroachdb_deployment == 'upgrade') | ternary(1, '100%') }}"
+    tasks:
+      - name: execute roachdiag.sh
+        shell: |
+          #!/bin/bash
+          #
+          # Health Check and Support script to capture relevant BIOS, Linux and user level info / environment.
+          # This script should be run on each server or virtual server running a CRDB node process.
+          #
+          # What info is collected?
+          # Only Linux-level configuration info and logs. No business data from data sources.
+          # Below is a partial list. Review the script for ultimate details.
+          # -	Versions and related details on OS and CRDB
+          # -	CPU & memory, config and consumption
+          # -	Network - interfaces, addresses, name resolution, open ports, bonding, etc.)
+          # -	Disk - volumes, scheduler 
+          # -	Dmsg, open files, running processes, memory consumption by process
+          # -	BIOS level hardware info from dmidecode. Particularly helpful on bare metal platforms
+          # -	CRDB info
+          #
+          
+          
+          #
+          # Settings
+          #
+          fnroot="`/bin/hostname -s`.`date +%Y%m%d-%H%M%S`"
+          outdir="`pwd`/$fnroot"
+          outfile="$outdir/roachdiag.$fnroot.txt"
+          dmifile="$outdir/dmidecode.$fnroot.txt"
+          tarfile="`pwd`/roachdiag.$fnroot.tgz"
+          
+          
+          usage()
+          {
+            echo
+            echo "Usage: $0 <optional path to cockroach executable>"
+            echo
+          }
+          
+          
+          #--------------------------------------------------------------------
+          output_token()
+          #--------------------------------------------------------------------
+          {
+              echo -n "$* " >> $outfile
+          }
+          
+          #--------------------------------------------------------------------
+          output_line()
+          #--------------------------------------------------------------------
+          {
+              echo "$*" >> $outfile
+          }
+          
+          #--------------------------------------------------------------------
+          output_title()
+          #--------------------------------------------------------------------
+          {
+              output_line ""
+              output_line "============================================================================="
+              output_line ":::::  $*"
+              output_line "============================================================================="
+          }
+          
+          #--------------------------------------------------------------------
+          exec_cmd()
+          #--------------------------------------------------------------------
+          {
+              eval $* >> $outfile 2>&1
+              local status=$?
+              if [ "$status" -ne 0 ]; then
+                  output_line "***** Command exited with status $status"
+              fi
+              return $status    
+          }
+          
+          #--------------------------------------------------------------------
+          exec_cmdt()
+          #--------------------------------------------------------------------
+          {
+              output_title $*
+              exec_cmd $*
+              local status=$?
+              return $status    
+          }
+          
+          #####################################################################
+          
+          usr=`whoami`
+          cockroachexe=""
+          PS3="Select : "
+                  
+          
+          if [ "$#" -ne 1 ]; then
+              echo
+              echo "Searching for 'cockroach' executable..."
+              declare -a candidates=()
+              while IFS= read -d '' -r file; do
+                  candidates+=("$file")
+              done < <(find / -type f -executable -name cockroach -print0 2> /dev/null)    
+          
+              if [ "${#candidates[@]}" -gt 1 ]; then
+                  echo
+                  select cockroachexe in "${candidates[@]}" "Quit" ; do
+                      if (( REPLY == 1 + ${#candidates[@]} )) ; then
+                          exit 1
+                      elif (( REPLY > 0 && REPLY <= ${#candidates[@]} )) ; then
+                          break
+                      else
+                          echo -n "Invalid option. "
+                      fi
+                  done            
+              elif [ ${candidates[0]} ]; then
+                  cockroachexe=${candidates[0]}
+                  echo "Found !!"
+                  ls -l $cockroachexe
+              fi
+          elif [ -x "$1" ]; then
+              cockroachexe="$1"
+          else
+              echo
+              echo "ERROR: File '$1' not found or is not an executable"
+              usage
+              exit 1
+          fi
+          
+          if [ -z "$cockroachexe" ]; then
+              echo "***** CockroachDB binary not found on this host. Continuing..."
+          else
+              cockroach_owner=$(ls -l $cockroachexe| awk '{print $3}')
+              if [ "$usr" != "$cockroach_owner" ]; then
+                  echo
+                  echo "IMPORTANT:  To produce a relevant report, '$0' should be run as Linux user that runs 'cockroach'"
+                  echo
+                  echo "Current Linux user:                       $usr"
+                  echo "Owner of 'cockroach' executable owner:    $cockroach_owner"
+                  echo
+                  select cockroachadmin in "Continue as user '$usr'" "Quit and re-run $0 as user '$cockroach_owner'" ; do 
+                      if (( REPLY > 1 )) ; then
+                          echo
+                          echo "Hint: You can use sudo, e.g.  sudo -u $cockroach_owner $0"
+                          exit 1
+                      else
+                          break;
+                      fi
+                  done    
+              fi
+          fi
+          
+          mkdir -p $outdir
+          
+          output_line "********************************************"
+          output_line "* Cockroach DB System Configuration Report *"
+          output_line "*       `date`       *"
+          output_line "********************************************"
+          
+          
+          output_title OS
+          exec_cmd "if [ -f '/etc/os-release' ]; then cat /etc/os-release; fi"
+          exec_cmd "if [ -f '/etc/centos-release' ]; then cat /etc/centos-release; fi"
+          exec_cmd "if [ -f '/etc/redhat-release' ]; then cat /etc/redhat-release; fi"
+          exec_cmd "if [ -f '/etc/SuSE-release' ]; then cat /etc/SuSE-release; fi"
+          exec_cmdt uname -a
+          exec_cmdt hostnamectl
+          
+          
+          if [ ! -z "$cockroachexe" ]; then
+          #   CRDB
+              output_title CockroachDB
+              exec_cmd ls -l $cockroachexe
+              exec_cmd $cockroachexe version
+          fi
+          
+          #
+          # Is CRDB node setup as a service? Is it enabled?
+          #
+          exec_cmdt "systemctl --type=service | grep -i 'cockroach\|crdb'"
+          if [ "$?" -eq 0 ]; then
+          #   Is it enabled?
+              exec_cmdt "systemctl list-unit-files --type=service | grep -i 'cockroach\|crdb'"
+              if [ "$?" -ne 0 ]; then output_line "Cockroach DB is NOT among enabled services"; fi
+          
+              shopt -s nullglob
+              for f in /etc/systemd/system/{*crdb*,*cockroach*}.service; do
+                  exec_cmdt cat $f
+              done
+              shopt -u nullglob
+          else
+              output_line "Cockroach DB is NOT configured as a service"
+          fi
+          
+          
+          output_title This User
+          exec_cmd id
+          
+          output_title User Environment
+          exec_cmd env
+          
+          
+          # Limits - soft, hard and settings file
+          exec_cmdt ulimit -a
+          exec_cmdt ulimit -Ha
+          exec_cmdt cat /etc/security/limits.conf
+          exec_cmdt "if [ -f /proc/sys/fs/file-max ]; then cat /proc/sys/fs/file-max; fi"
+          exec_cmdt "if [ -f /etc/pam.d/common-sessions ]; then cat /etc/pam.d/common-sessions; fi"
+          exec_cmdt "if [ -f /etc/pam.d/common-session-noninteractive ]; then cat /etc/pam.d/common-session-noninteractive; fi"
+          
+          exec_cmdt "if [ -f /etc/sysctl.conf ]; then cat /etc/sysctl.conf; fi"
+          if [ -x "$(command -v sysctl)" ]; then exec_cmdt sysctl -a
+          else  output_title "sysctl not found"; fi
+          
+          
+          # Compute
+          exec_cmdt lscpu
+          exec_cmdt cat /proc/meminfo
+          exec_cmdt cat /proc/vmstat
+          exec_cmdt /usr/bin/free
+          
+          
+          # Time synchronization - is NTP enabled? synchronized?
+          exec_cmdt timedatectl status
+          
+          # If NTP client is timesyncd
+          exec_cmdt "systemctl --type=service | grep timesyncd"
+          if [ "$?" -eq 0 ]; then
+          #   Is it enabled?
+              exec_cmdt "systemctl list-unit-files --type=service | grep timesyncd"
+              if [ "$?" -ne 0 ]; then output_line "systemd-timesyncd service is NOT enabled"; fi
+          else
+              output_line "systemd-timesyncd service is NOT configured"
+          fi
+          
+          # If NTP client is ntpd
+          exec_cmdt "if [ -d /etc/ntp.conf ]; then cat /etc/ntp.conf; fi"
+          if [ -x "$(command -v ntpq)" ]; then exec_cmdt ntpq -p
+          else  output_title "ntpq not found"; fi
+          
+          if [ -x "$(command -v ntpstat)" ]; then exec_cmdt ntpstat
+          else  output_title "ntpstat not found"; fi
+          
+          # If NTP client is chrony
+          exec_cmdt "if [ -d /etc/chrony.conf ]; then cat /etc/chrony.conf; fi"
+          if [ -x "$(command -v chronyc)" ]; then
+              exec_cmdt "systemctl --type=service | grep chrony"
+              exec_cmdt "systemctl list-unit-files --type=service | grep chrony"
+              exec_cmdt chronyc tracking
+              exec_cmdt chronyc sources -v
+              exec_cmdt chronyc sourcestats
+          else  output_title "chronyc not found"; fi
+          
+          
+          # Networking
+          output_title Host
+          output_token \$HOSTNAME:;exec_cmd echo $HOSTNAME
+          output_token Hostname:;exec_cmd /bin/hostname
+          output_token FQDN \(Long\) hostname:;exec_cmd /bin/hostname -f
+          output_token Short hostname:;exec_cmd /bin/hostname -s
+          
+          if [ -x "$(command -v ping)" ]; then exec_cmdt "ping -c 1 `hostname`"
+          else  output_title "ping not found"; fi
+          
+          exec_cmdt cat /etc/hosts
+          
+          # DNS
+          exec_cmdt cat /etc/resolv.conf
+          
+          # Interfaces and eth stats (old and new method, at least one should work)
+          output_title Network Interfaces
+          # RHEL
+          exec_cmd 'if [ -d /etc/sysconfig/network-scripts ]; then for nic in `ls /etc/sysconfig/network-scripts/ifcfg-*`;do echo;echo "[$nic]:"; cat $nic; done; fi'
+          # SUSE
+          exec_cmd 'if [ -d /etc/sysconfig/network/scripts ]; then for nic in `ls /etc/sysconfig/network/ifcfg-*`;do echo;echo "[$nic]:"; cat $nic; done; fi'
+          # Debian
+          exec_cmd "if [ -e /etc/network/interfaces ]; then cat /etc/network/interfaces; fi"
+          
+          # Bonded Interfaces
+          exec_cmdt "if [ -d /proc/net/bonding ]; then cat /proc/net/bonding/bond*; fi"
+          
+          # Net stats
+          exec_cmdt ifconfig
+          exec_cmdt "ip -s a"
+          exec_cmdt netstat -s
+          
+          # Ports
+          exec_cmdt netstat -tuan
+          
+          
+          # Storage
+          exec_cmdt cat /proc/scsi/scsi
+          exec_cmdt lsblk
+          
+          exec_cmdt df -Th
+          exec_cmdt mount
+          
+          output_title I/O Scheduler Settings
+          exec_cmd 'for dev in `ls /sys/block`;do echo "[$dev]:";cat /sys/block/$dev/queue/scheduler; done'
+          
+          # Commands requiring root, execute opportunistically
+          if [ $(id -u) = 0 ]; then
+            exec_cmdt blockdev --report
+          #  Hardware (BIOS level) to a separate file for readability
+            if [ -x "$(command -v dmidecode)" ]; then dmidecode > $dmifile; fi
+          fi
+          
+          # Check for s/w RAID
+          exec_cmdt cat /proc/mdstat
+          
+          # Check for h/w RAID
+          if [ -x "$(command -v lspci)" ]; then exec_cmdt lspci -vv
+          else  output_title "lspci not found"; fi
+          
+          
+          # Open files
+          if [ -x "$(command -v lsof)" ]; then exec_cmdt lsof -u $usr
+          else  output_title "lsof not found"; fi
+          
+          
+          # System Utilization
+          if [ -x "$(command -v sar)" ]; then exec_cmdt sar -A
+          else  output_title "sar not found"; fi
+          
+          exec_cmdt "if [ -e /etc/modprobe.conf ]; then cat /etc/modprobe.conf; fi"
+          
+          exec_cmdt dmesg -T
+          exec_cmdt uptime
+          exec_cmdt last -w
+          
+          exec_cmdt "/bin/ps -ef"
+          #output_title "Processes by memory use (vsz, rss), in KB, descending order"
+          #exec_cmd  "/bin/ps -efo vsz,rss,pid,args | sort -k1 -g -r" 
+          exec_cmdt  "top -c -b -n 1 -o +%MEM" 
+          
+          
+          
+          # Build the report as a compressed tarball
+          rm -f $tarfile
+          tar czhf $tarfile $fnroot
+          # Cleanup
+          rm -rf $fnroot
+          
+          echo
+          echo =============
+          echo Data Privacy:
+          echo =============
+          echo This report captured Linux-level system configuration. No business data is collected.
+          echo Customers are encouraged to examine contents of this report before sharing outside the organization.
+          echo
+          echo System report was written into the file \'$tarfile\'
+          echo
+          
+          exit 0
+    tags:
+      - roachdiag
+  
+  - name: SAVE BUNDLE TO AWS S3
+    hosts: localhost
+    gather_facts: yes
+    become: no
+    vars_files:
+      - config/cockroachdb.yaml
+    tasks:
+      - ansible.builtin.fetch:
+          src: roachdiag.tar.gz
+          dest: /tmp/roachdiag 
+  
+      - shell: |
+          zip /tmp/roachdiag
+      
+      # - name: copy to S3
+  
+    tags:
+      - bundle
+  
