@@ -1,0 +1,20 @@
+- name: Cockroach Cloud
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  become: no
+  tasks:   
+    - name: provision CC cluster
+      fabiog1901.cockroachdb.cc_cluster:
+        name: "{{ cluster_name }}"
+        provider: "{{ cluster_provider }}"
+        plan: "{{ cluster_plan }}"
+        regions: "{{ cluster_regions }}"
+        spend_limit: "{{ cluster_spend_limit }}"
+
+        api_client:
+          api_version: '2022-09-20'
+      register: out
+
+    - debug:
+        var: out
