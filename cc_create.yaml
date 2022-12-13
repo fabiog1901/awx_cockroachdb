@@ -6,7 +6,7 @@
   tasks:   
   - name: provision CC cluster
     fabiog1901.cockroachdb.cc_cluster:
-      state: "{{ cluster_state }}"
+      state: present
       name: "{{ cluster_name }}"
       provider: "{{ cluster_provider }}"
       plan: "{{ cluster_plan }}"
