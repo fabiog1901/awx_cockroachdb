@@ -4,17 +4,35 @@
   gather_facts: no
   become: no
   tasks:   
-    - name: provision CC cluster
-      fabiog1901.cockroachdb.cc_cluster:
-        name: "{{ cluster_name }}"
-        provider: "{{ cluster_provider }}"
-        plan: "{{ cluster_plan }}"
-        regions: "{{ cluster_regions }}"
-        spend_limit: "{{ cluster_spend_limit }}"
+  - name: provision CC cluster
+    fabiog1901.cockroachdb.cc_cluster:
+      state: "{{ cluster_state }}"
+      name: "{{ cluster_name }}"
+      provider: "{{ cluster_provider }}"
+      plan: "{{ cluster_plan }}"
+      regions: "{{ cluster_regions }}"
+      spend_limit: "{{ cluster_spend_limit }}"
 
-        api_client:
-          api_version: '2022-09-20'
-      register: out
+      api_client:
+        api_version: '2022-09-20'
+    register: out
 
-    - debug:
-        var: out
+  - name: create database
+    fabiog1901.cockroachdb.cc_database:
+      state: present
+      cluster_id: "{{ out.cluster.id }}"
+      name: "{{ database_name }}"
+      api_client:
+        api_version: '2022-09-20'
+
+  - name: create user 
+    fabiog1901.cockroachdb.cc_user:
+      state: present
+      cluster_id: "{{ out.cluster.id }}"
+      name: "{{ user_name }}"
+      password: "{{ user_pass }}"
+      api_client:
+        api_version: '2022-09-20'
+
+  - debug:
+      msg: "cockroach sql --url \"postgres://{{ user_name }}:{{ user_pass }}@{{ out.cluster.sql_dns }}:26257/{{ database_name }}?sslmode=verify-full\" "
