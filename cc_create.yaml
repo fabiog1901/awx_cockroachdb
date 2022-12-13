@@ -35,4 +35,4 @@
         api_version: '2022-09-20'
 
   - debug:
-      msg: "cockroach sql --url \"postgres://{{ user_name }}:{{ user_pass }}@{{ out.cluster.sql_dns }}:26257/{{ database_name }}?sslmode=verify-full\" "
+      msg: "cockroach sql --url 'postgres://{{ user_name }}:{{ user_pass }}@{{ out.cluster.sql_dns }}:26257/{{ database_name }}?sslmode=verify-full' "
