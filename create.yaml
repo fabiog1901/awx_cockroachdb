@@ -10,12 +10,6 @@
   vars_files:
     - config/cockroachdb.yaml
   tasks:
-    - debug:
-       msg: 
-        - "{{ regions }}"
-        - "{{ deployment_id }}"
-    - fail:
-
     - name: ensure presence of instances and Ansible inventory
       fabiog1901.cockroachdb.cloud_instance:
         state: present
