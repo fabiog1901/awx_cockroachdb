@@ -102,6 +102,17 @@
   tags:
     - certificates
 
+- name: CONFIGURE OS
+  hosts: cockroachdb
+  gather_facts: yes
+  become: yes
+  tasks:
+    - include_role:
+        name: fabiog1901.cockroachdb.config_os
+  tags:
+    - platform
+    - config_os
+
 - name: DEPLOY COCKROACHDB
   hosts: cockroachdb
   gather_facts: yes
