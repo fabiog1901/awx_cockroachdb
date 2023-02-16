@@ -1,0 +1,551 @@
+---
+regions:
+  defaults: &regions
+    user: ubuntu
+    public_ip: yes
+    public_key_id: workshop
+  aws:
+    defaults: &aws
+      <<: *regions
+      cloud: aws
+    us_east_1:
+      defaults: &aws_us_east_1
+        <<: *aws
+        region: us-east-1
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-019212a8baeffb0fa # ubuntu 20.04
+      a: &aws_us_east_1a
+        <<: *aws_us_east_1
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_us_east_1b
+        <<: *aws_us_east_1
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_us_east_1c
+        <<: *aws_us_east_1
+        zone: c
+        subnet: subnet-xxyyzz
+    us_east_2:
+      defaults: &aws_us_east_2
+        <<: *aws
+        region: us-east-2
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-0996d3051b72b5b2c
+      a: &aws_us_east_2a
+        <<: *aws_us_east_2
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_us_east_2b
+        <<: *aws_us_east_2
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_us_east_2c
+        <<: *aws_us_east_2
+        zone: c
+        subnet: subnet-xxyyzz
+    us_west_2:
+      defaults: &aws_us_west_2
+        <<: *aws
+        region: us-west-2
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-0928f4202481dfdf6 # ubuntu 20.04
+      a: &aws_us_west_2a
+        <<: *aws_us_west_2
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_us_west_2b
+        <<: *aws_us_west_2
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_us_west_2c
+        <<: *aws_us_west_2
+        zone: c
+        subnet: subnet-xxyyzz
+    eu_west_1:
+      defaults: &aws_eu_west_1
+        <<: *aws
+        region: eu-west-1
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-08bac620dc84221eb # ubuntu 20.04
+      a: &aws_eu_west_1a
+        <<: *aws_eu_west_1
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_eu_west_1b
+        <<: *aws_eu_west_1
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_eu_west_1c
+        <<: *aws_eu_west_1
+        zone: c
+        subnet: subnet-xxyyzz
+    eu_west_3:
+      defaults: &aws_eu_west_3
+        <<: *aws
+        region: eu-west-3
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-0d6aecf0f0425f42a # ubuntu 20.04
+      a: &aws_eu_west_3a
+        <<: *aws_eu_west_3
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_eu_west_3b
+        <<: *aws_eu_west_3
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_eu_west_3c
+        <<: *aws_eu_west_3
+        zone: c
+        subnet: subnet-xxyyzz
+    ap_northeast_1:
+      defaults: &aws_ap_northeast_1
+        <<: *aws
+        region: ap-northeast-1
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-059b6d3840b03d6dd # ubuntu 20.04
+      a: &aws_ap_northeast_1a
+        <<: *aws_ap_northeast_1
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_ap_northeast_1b
+        <<: *aws_ap_northeast_1
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_ap_northeast_1c
+        <<: *aws_ap_northeast_1
+        zone: c
+        subnet: subnet-xxyyzz
+    ap_south_1:
+      defaults: &aws_ap_south_1
+        <<: *aws
+        region: ap-south-1
+        security_groups: 
+          - sg-xxyyzz
+        image: ami-0d758c1134823146a # ubuntu 20.04
+      a: &aws_ap_south_1a
+        <<: *aws_ap_south_1
+        zone: a
+        subnet: subnet-xxyyzz
+      b: &aws_ap_south_1b
+        <<: *aws_ap_south_1
+        zone: b
+        subnet: subnet-xxyyzz
+      c: &aws_ap_south_1c
+        <<: *aws_ap_south_1
+        zone: c
+        subnet: subnet-xxyyzz
+  gcp:
+    defaults: &gcp
+      <<: *regions
+      cloud: gcp
+      image: projects/ubuntu-os-cloud/global/images/family/ubuntu-2004-lts
+      project: my-team
+      security_groups:
+        - cockroachdb
+    us_east1:
+      defaults: &gcp_us_east1
+        <<: *gcp
+        region: us-east1
+        vpc_id: default
+      d: &gcp_us_east1_d
+        <<: *gcp_us_east1
+        zone: d
+        subnet: default
+      b: &gcp_us_east1_b
+        <<: *gcp_us_east1
+        zone: b
+        subnet: default
+      c: &gcp_us_east1_c
+        <<: *gcp_us_east1
+        zone: c
+        subnet: default
+    us_east4:
+      defaults: &gcp_us_east4
+        <<: *gcp
+        region: us-east4
+        vpc_id: default
+      a: &gcp_us_east4_a
+        <<: *gcp_us_east4
+        zone: a
+        subnet: default
+      b: &gcp_us_east4_b
+        <<: *gcp_us_east4
+        zone: b
+        subnet: default
+      c: &gcp_us_east4_c
+        <<: *gcp_us_east4
+        zone: c
+        subnet: default
+    us_central1:
+      defaults: &gcp_us_central1
+        <<: *gcp
+        region: us-central1
+        vpc_id: default
+      a: &gcp_us_central1_a
+        <<: *gcp_us_central1
+        zone: a
+        subnet: default
+      b: &gcp_us_central1_b
+        <<: *gcp_us_central1
+        zone: b
+        subnet: default
+      c: &gcp_us_central1_c
+        <<: *gcp_us_central1
+        zone: c
+        subnet: default
+      f: &gcp_us_central1_f
+        <<: *gcp_us_central1
+        zone: f
+        subnet: default
+    us_west1:
+      defaults: &gcp_us_west1
+        <<: *gcp
+        region: us-west1
+        vpc_id: default
+      a: &gcp_us_west1_a
+        <<: *gcp_us_west1
+        zone: a
+        subnet: default
+      b: &gcp_us_west1_b
+        <<: *gcp_us_west1
+        zone: b
+        subnet: default
+      c: &gcp_us_west1_c
+        <<: *gcp_us_west1
+        zone: c
+        subnet: default
+    us_west4:
+      defaults: &gcp_us_west4
+        <<: *gcp
+        region: us-west4
+        vpc_id: default
+      a: &gcp_us_west4_a
+        <<: *gcp_us_west4
+        zone: a
+        subnet: default
+      b: &gcp_us_west4_b
+        <<: *gcp_us_west4
+        zone: b
+        subnet: default
+      c: &gcp_us_west4_c
+        <<: *gcp_us_west4
+        zone: c
+        subnet: default
+    europe_north1:
+      defaults: &gcp_europe_north1
+        <<: *gcp
+        region: europe-north1
+        vpc_id: default
+      a: &gcp_europe_north1_a
+        <<: *gcp_europe_north1
+        zone: a
+        subnet: default
+      b: &gcp_europe_north1_b
+        <<: *gcp_europe_north1
+        zone: b
+        subnet: default
+      c: &gcp_europe_north1_c
+        <<: *gcp_europe_north1
+        zone: c
+        subnet: default
+    europe_west2:
+      defaults: &gcp_europe_west2
+        <<: *gcp
+        region: europe-west2
+        vpc_id: default
+      a: &gcp_europe_west2_a
+        <<: *gcp_europe_west2
+        zone: a
+        subnet: default
+      b: &gcp_europe_west2_b
+        <<: *gcp_europe_west2
+        zone: b
+        subnet: default
+      c: &gcp_europe_west2_c
+        <<: *gcp_europe_west2
+        zone: c
+        subnet: default
+    europe_west1:
+      defaults: &gcp_europe_west1
+        <<: *gcp
+        region: europe-west1
+        vpc_id: default
+      a: &gcp_europe_west1_a
+        <<: *gcp_europe_west1
+        zone: a
+        subnet: default
+      b: &gcp_europe_west1_b
+        <<: *gcp_europe_west1
+        zone: b
+        subnet: default
+      c: &gcp_europe_west1_c
+        <<: *gcp_europe_west1
+        zone: c
+        subnet: default
+    australia_southeast1:
+      defaults: &gcp_australia_southeast1
+        <<: *gcp
+        region: australia-southeast1
+        vpc_id: default
+      a: &gcp_australia_southeast1_a
+        <<: *gcp_australia_southeast1
+        zone: a
+        subnet: default
+      b: &gcp_australia_southeast1_b
+        <<: *gcp_australia_southeast1
+        zone: b
+        subnet: default
+      c: &gcp_australia_southeast1_c
+        <<: *gcp_australia_southeast1
+        zone: c
+        subnet: default
+    asia_southeast2:
+      defaults: &gcp_asia_southeast2
+        <<: *gcp
+        region: asia-southeast2
+        vpc_id: default
+      a: &gcp_asia_southeast2_a
+        <<: *gcp_asia_southeast2
+        zone: a
+        subnet: default
+      b: &gcp_asia_southeast2_b
+        <<: *gcp_asia_southeast2
+        zone: b
+        subnet: default
+      c: &gcp_asia_southeast2_c
+        <<: *gcp_asia_southeast2
+        zone: c
+        subnet: default
+    asia_northeast2:
+      defaults: &gcp_asia_northeast2
+        <<: *gcp
+        region: asia-northeast2
+        vpc_id: default
+      a: &gcp_asia_northeast2_a
+        <<: *gcp_asia_northeast2
+        zone: a
+        subnet: default
+      b: &gcp_asia_northeast2_b
+        <<: *gcp_asia_northeast2
+        zone: b
+        subnet: default
+      c: &gcp_asia_northeast2_c
+        <<: *gcp_asia_northeast2
+        zone: c
+        subnet: default
+  azure:
+    defaults: &azure
+      <<: *regions
+      cloud: azure
+      subnet: default
+      security_group: []
+      image: Canonical:0001-com-ubuntu-server-focal:20_04-lts:latest
+    eastus:
+      defaults: &azure_eastus
+        <<: *azure
+        region: eastus
+        vpc_id: eastus-vnet
+      default: &azure_eastus_default
+        <<: *azure_eastus
+        zone: default
+    southafricanorth:
+      defaults: &azure_southafricanorth
+        <<: *azure
+        region: southafricanorth
+        vpc_id: southafricanorth-vnet
+      default: &azure_southafricanorth_default
+        <<: *azure_southafricanorth
+        zone: default
+    koreacentral:
+      defaults: &azure_koreacentral
+        <<: *azure
+        region: koreacentral
+        vpc_id: koreacentral-vnet
+      default: &azure_koreacentral_default
+        <<: *azure_koreacentral
+        zone: default
+    francecentral:
+      defaults: &azure_francecentral
+        <<: *azure
+        region: francecentral
+        vpc_id: francecentral-vnet
+      default: &azure_francecentral_default
+        <<: *azure_francecentral
+        zone: default
+    westeurope:
+      defaults: &azure_westeurope
+        <<: *azure
+        region: westeurope
+        vpc_id: westeurope-vnet
+      default: &azure_westeurope_default
+        <<: *azure_westeurope
+        zone: default
+instances:
+  aws:
+    "0":
+      "0":
+        "0": m6i.4xlarge
+      "1":
+        "0": t2.small
+        "1": t2.micro
+        "2": t2.small
+        high_cpu: t2.micro
+        high_mem: t2.small
+        "0.5": t2.nano
+      "2":
+        "0": m6i.large
+        "1": t3.micro
+        "2": t3.small
+        "4": c5.large
+        "8": m6i.large
+        "16": r5.large
+        high_cpu: c5.large
+        high_mem: r5.large
+      "4":
+        "0": m6i.xlarge
+        "8": c5.xlarge
+        "16": m6i.xlarge
+        "32": r5.xlarge
+        high_cpu: c5.xlarge
+        high_mem: r5.xlarge
+      "8":
+        "0": m6i.2xlarge
+        "16": c5.2xlarge
+        "32": m6i.2xlarge
+        "64": r5.2xlarge
+        high_cpu: c5.2xlarge
+        high_mem: r5.2xlarge
+      "16":
+        "0": m6i.4xlarge
+        "32": c5.4xlarge
+        "64": m6i.4xlarge
+        "128": r5.4xlarge
+        high_cpu: c5.4xlarge
+        high_mem: r5.4xlarge
+      "32":
+        "0": m6i.8xlarge
+        "128": m6i.8xlarge
+        "256": r5.8xlarge
+        high_cpu: c5.9xlarge
+        high_mem: r5.8xlarge
+    "1":
+      "0":
+        "0": p3.2xlarge
+      "8":
+        "0": p3.2xlarge
+    "4":
+      "0":
+        "0": p3.8xlarge
+      "32":
+        "0": p3.8xlarge
+  azure:
+    "0":
+      "1":
+        "1": Standard_B1s
+        "2": Standard_B1ms
+        high_cpu: Standard_B1ls
+        default: Standard_B1ms
+        high_mem: Standard_B1ms
+        "0.5": Standard_B1ls
+      "2":
+        "4": Standard_F2s_v2
+        "8": Standard_D2s_v3
+        "16": Standard_E2s_v3
+        high_cpu: Standard_F2s_v2
+        default: Standard_D2s_v3
+        high_mem: Standard_E2s_v3
+      "4":
+        "8": Standard_F4s_v2
+        "16": Standard_D4s_v3
+        "32": Standard_E4s_v3
+        high_cpu: Standard_F4s_v2
+        default: Standard_D4s_v3
+        high_mem: Standard_E4s_v3
+      "8":
+        "16": Standard_F8s_v2
+        "32": Standard_D8s_v3
+        "64": Standard_E8s_v3
+        high_cpu: Standard_F8s_v2
+        default: Standard_D8s_v3
+        high_mem: Standard_E8s_v3
+      "16":
+        "32": Standard_F16s_v2
+        "64": Standard_D16s_v3
+        "128": Standard_E16s_v3
+        high_cpu: Standard_F16s_v2
+        default: Standard_D16s_v3
+        high_mem: Standard_E16s_v3
+      "32":
+        "64": Standard_F32s_v2
+        "128": Standard_D32s_v3
+        "256": Standard_E32s_v3
+        high_cpu: Standard_F32s_v2
+        default: Standard_D32s_v3
+        high_mem: Standard_E32s_v3
+      default:
+        default: Standard_D16s_v3
+    "1":
+      "6":
+        default: Standard_NC6
+      default: Standard_NC6
+    "4":
+      "24":
+        default: Standard_NC24r
+      default: Standard_NC24r
+  gcp:
+    "0":
+      "0":
+        "0": n2-standard-16
+      "1":
+        "0": g1-small
+        "1": f1-micro
+        "2": g1-small
+        high_cpu: g1-small
+        high_mem: g1-small
+      "2":
+        "0": n2-standard-2
+        "2": n2-highcpu-2
+        "4": n2-standard-2
+        "8": n2-standard-2
+        "16": n2-highmem-2
+        high_cpu: n2-highcpu-2
+        high_mem: n2-highmem-2
+      "4":
+        "0": n2-standard-4
+        "4": n2-highcpu-4
+        "8": n2-standard-4
+        "16": n2-standard-4
+        "32": n2-highmem-4
+        high_cpu: n2-highcpu-4
+        high_mem: n2-highmem-4
+      "8":
+        "0": n2-standard-8
+        "8": n2-highcpu-8
+        "16": n2-standard-8
+        "32": n2-standard-8
+        "64": n2-highmem-8
+        high_cpu: n2-highcpu-8
+        high_mem: n2-highmem-8
+      "16":
+        "0": n2-standard-16
+        "16": n2-highcpu-16
+        "32": n2-standard-16
+        "64": n2-standard-16
+        "128": n2-highmem-16
+        high_cpu: n2-highcpu-16
+        high_mem: n2-highmem-16
+      "32":
+        "0": n2-standard-32
+        "32": n2-highcpu-32
+        "64": n2-standard-32
+        "128": n2-standard-32
+        "256": n2-highmem-32
+        high_cpu: n2-highcpu-32
+        high_mem: n2-highmem-32
