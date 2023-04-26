@@ -345,7 +345,7 @@ regions:
       <<: *regions
       cloud: azure
       subnet: default
-      security_group: []
+      security_group: ''
       image: Canonical:0001-com-ubuntu-server-focal:20_04-lts:latest
     eastus:
       defaults: &azure_eastus
