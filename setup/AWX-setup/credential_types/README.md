@@ -1,6 +1,6 @@
 # Custom Credential Types
 
-## Microsoft_Azure**
+## Microsoft_Azure
 
 Input configuration
 

@@ -1,0 +1,14 @@
+- name: Cockroach Cloud
+  hosts: localhost
+  connection: local
+  gather_facts: no
+  become: no
+  tasks:   
+  - name: deprovision CC cluster
+    fabiog1901.cockroachdb.cc_cluster:
+      state: present
+      name: "{{ cluster_name }}"
+
+      api_client:
+        api_version: '2022-09-20'
+
