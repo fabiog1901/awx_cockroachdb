@@ -69,6 +69,3 @@ $ k config get-contexts
 CURRENT   NAME   CLUSTER   AUTHINFO   NAMESPACE
 *         awx    awx       awx        awx
 ```
-
-
-

@@ -1,6 +1,6 @@
 # Custom Credential Types
 
-## Azure
+## Microsoft_Azure**
 
 Input configuration
 
@@ -36,4 +36,23 @@ env:
   AZURE_CLIENT_SECRET: '{{ AZURE_CLIENT_SECRET }}'
   AZURE_RESOURCE_GROUP: '{{ AZURE_RESOURCE_GROUP }}'
   AZURE_SUBSCRIPTION_ID: '{{ AZURE_SUBSCRIPTION_ID }}'
+```
+
+## CockroachCloud
+
+Input Configuration
+
+```yaml
+fields:
+  - id: CC_KEY
+    type: string
+    label: CC_KEY
+    secret: true
+```
+
+Injector configuration
+
+```yaml
+env:
+  CC_KEY: '{{ CC_KEY }}'
 ```
