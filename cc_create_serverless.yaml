@@ -22,10 +22,11 @@
       provider: "{{ cluster_provider }}"
       plan: "{{ cluster_plan }}"
       regions: "{{ cluster_regions }}"
-      spend_limit: "{{ cluster_spend_limit }}"
+      request_unit_limit: "{{ request_unit_limit }}"
+      storage_mib_limit: "{{ storage_mib_limit }}"
 
       api_client:
-        api_version: '2022-09-20'
+        api_version: '2023-04-10'
     register: out
 
   - name: create database
