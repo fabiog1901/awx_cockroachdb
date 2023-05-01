@@ -8,4 +8,5 @@
     fabiog1901.cockroachdb.cc_cluster:
       state: absent
       name: "{{ cluster_name }}"
+      regions: n/a
 
