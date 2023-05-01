@@ -9,6 +9,3 @@
       state: absent
       name: "{{ cluster_name }}"
 
-      api_client:
-        api_version: '2023-04-10'
-
