@@ -278,9 +278,9 @@ regions:
         <<: *gcp
         region: europe-west1
         vpc_id: default
-      a: &gcp_europe_west1_a
+      d: &gcp_europe_west1_d
         <<: *gcp_europe_west1
-        zone: a
+        zone: d
         subnet: default
       b: &gcp_europe_west1_b
         <<: *gcp_europe_west1

@@ -141,8 +141,8 @@ deployment:
       - import: "{{ regions.gcp.europe_west2.c }}"
         exact_count: "{{ ('gcp_europe_west2_c' in desired_regions) | ternary(desired_count, 0) }}"
 
-      - import: "{{ regions.gcp.europe_west1.a }}"
-        exact_count: "{{ ('gcp_europe_west1_a' in desired_regions) | ternary(desired_count, 0) }}"
+      - import: "{{ regions.gcp.europe_west1.d }}"
+        exact_count: "{{ ('gcp_europe_west1_d' in desired_regions) | ternary(desired_count, 0) }}"
       - import: "{{ regions.gcp.europe_west1.b }}"
         exact_count: "{{ ('gcp_europe_west1_b' in desired_regions) | ternary(desired_count, 0) }}"
       - import: "{{ regions.gcp.europe_west1.c }}"
